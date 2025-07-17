@@ -40,7 +40,7 @@ fun BuscarPage(modifier: Modifier = Modifier) {
             onValueChange = { pesquisa = it },
             placeholder = { Text("Pesquisar...") },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Buscar") },
-            modifier = Modifier.fillMaxWidth().height(56.dp)
+            modifier = Modifier.fillMaxWidth().height(56.dp).background(Color.White)
         )
 
     }
