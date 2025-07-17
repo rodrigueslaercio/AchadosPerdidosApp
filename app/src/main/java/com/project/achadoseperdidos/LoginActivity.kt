@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,18 +17,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,60 +60,95 @@ fun LoginPage(modifier: Modifier = Modifier) {
     var password by rememberSaveable { mutableStateOf("") }
     val activity = LocalContext.current as? Activity
     Column(
-        modifier = modifier.padding(16.dp).fillMaxSize(),
+        modifier = modifier
+            .padding(16.dp)
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        Spacer(modifier = Modifier.size(200.dp))
+
         Text(
             text = "Achados & Perdidos",
-            fontSize = 24.sp
+            fontSize = 40.sp,
+            fontWeight = FontWeight.ExtraBold
         )
+        Spacer(modifier = Modifier.size(200.dp))
+
         OutlinedTextField(
             value = email,
             label = { Text(text = "Digite seu e-mail") },
-            modifier = modifier.fillMaxWidth(fraction = 0.9f),
-            onValueChange = { email = it }
-        )
-        Spacer(modifier = Modifier.size(24.dp))
+            modifier = Modifier.fillMaxWidth(fraction = 0.9f),
+            onValueChange = { email = it },
+
+            )
+        Spacer(modifier = Modifier.size(15.dp))
         OutlinedTextField(
             value = password,
             label = { Text(text = "Digite sua senha") },
-            modifier = modifier.fillMaxWidth(fraction = 0.9f),
+            modifier = Modifier.fillMaxWidth(fraction = 0.9f),
             onValueChange = { password = it },
             visualTransformation = PasswordVisualTransformation()
         )
         Spacer(modifier = Modifier.size(24.dp))
-        Row(modifier = modifier) {
-            Button(
-                onClick = {
-                    activity?.startActivity(
-                        Intent(activity, MainActivity::class.java).setFlags(
-                            Intent.FLAG_ACTIVITY_SINGLE_TOP
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(
+                    onClick = {
+                        activity?.startActivity(
+                            Intent(activity, MainActivity::class.java).setFlags(
+                                Intent.FLAG_ACTIVITY_SINGLE_TOP
+                            )
                         )
-                    )
-                    Toast.makeText(activity, "Login OK!", Toast.LENGTH_LONG).show()
-                },
-                enabled = email.isNotEmpty() && password.isNotEmpty()
-            ) {
-                Text("Login")
+                        Toast.makeText(activity, "Login OK!", Toast.LENGTH_LONG).show()
+                    },
+                    enabled = email.isNotEmpty() && password.isNotEmpty(),
+                    shape = RoundedCornerShape(8.dp),
+                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Green)
+                ) {
+                    Text("Login", fontSize = 20.sp)
+                }
+                Spacer(modifier = Modifier.size(24.dp))
+                Button(
+                    onClick = { email = ""; password = "" },
+                    shape = RoundedCornerShape(8.dp),
+                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp),
+                ) {
+                    Text("Limpar", fontSize =  20.sp)
+                }
             }
             Spacer(modifier = Modifier.size(24.dp))
-            Button(
-                onClick = { email = ""; password = "" }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
             ) {
-                Text("Limpar")
-            }
-            Spacer(modifier = Modifier.size(24.dp))
-            Button(
-                onClick = { activity?.startActivity(
-                    Intent(activity, RegisterActivity::class.java).setFlags(
-                        Intent.FLAG_ACTIVITY_SINGLE_TOP
+                Button(
+                    onClick = {
+                        activity?.startActivity(
+                            Intent(activity, RegisterActivity::class.java).setFlags(
+                                Intent.FLAG_ACTIVITY_SINGLE_TOP
+                            )
+                        )
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
+                ) {
+                    Text(
+                        "Registrar-se",
+                        color = Color.Blue,
+                        fontSize = 20.sp,
+                        textDecoration = TextDecoration.Underline,
+                        fontWeight = FontWeight.Bold
                     )
-                ) }
-            ) {
-                Text("Registre-se")
+                }
             }
         }
     }
-
 }
