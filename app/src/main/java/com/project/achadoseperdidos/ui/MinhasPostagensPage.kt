@@ -14,9 +14,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import com.project.achadoseperdidos.model.MainViewModel
 
 @Composable
-fun MinhasPostagensPage(modifier: Modifier = Modifier) {
+fun MinhasPostagensPage(modifier: Modifier = Modifier, viewModel: MainViewModel) {
     val activity = LocalContext.current as? Activity
     Column(
         modifier = Modifier.fillMaxSize().background(Color.Magenta).wrapContentSize(Alignment.Center)

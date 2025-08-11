@@ -26,10 +26,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.project.achadoseperdidos.model.MainViewModel
 
 
 @Composable
-fun BuscarPage(modifier: Modifier = Modifier) {
+fun BuscarPage(modifier: Modifier = Modifier, viewModel: MainViewModel) {
     val activity = LocalContext.current as? Activity
     var pesquisa by rememberSaveable { mutableStateOf("") }
     Column(
