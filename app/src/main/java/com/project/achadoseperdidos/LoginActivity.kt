@@ -35,6 +35,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.project.achadoseperdidos.ui.HomePage
 import com.project.achadoseperdidos.ui.theme.AchadosEPerdidosTheme
 
@@ -101,12 +103,15 @@ fun LoginPage(modifier: Modifier = Modifier) {
             ) {
                 Button(
                     onClick = {
-                        activity?.startActivity(
-                            Intent(activity, MainActivity::class.java).setFlags(
-                                Intent.FLAG_ACTIVITY_SINGLE_TOP
-                            )
-                        )
-                        Toast.makeText(activity, "Login OK!", Toast.LENGTH_LONG).show()
+                        Firebase.auth.signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(activity!!) { task ->
+                                if (task.isSuccessful) {
+                                    Toast.makeText(activity, "Login realizado com sucesso!", Toast.LENGTH_LONG).show()
+                                } else {
+                                    Toast.makeText(activity, "Credenciais inválidas!", Toast.LENGTH_LONG).show()
+                                }
+                            }
+
                     },
                     enabled = email.isNotEmpty() && password.isNotEmpty(),
                     shape = RoundedCornerShape(8.dp),
