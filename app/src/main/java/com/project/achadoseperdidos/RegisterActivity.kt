@@ -25,6 +25,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.Firebase
@@ -80,14 +81,16 @@ fun RegisterPage(modifier: Modifier = Modifier) {
             value = senha,
             label = { Text(text = "Digite sua senha") },
             modifier = Modifier.fillMaxWidth(),
-            onValueChange = { senha = it }
+            onValueChange = { senha = it },
+            visualTransformation = PasswordVisualTransformation()
         )
         Spacer(modifier = Modifier.size(24.dp))
         OutlinedTextField(
             value = repetirSenha,
             label = { Text(text = "Repita sua senha") },
             modifier = Modifier.fillMaxWidth(),
-            onValueChange = { repetirSenha = it }
+            onValueChange = { repetirSenha = it },
+            visualTransformation = PasswordVisualTransformation()
         )
         Row(modifier = modifier) {
             Button(
