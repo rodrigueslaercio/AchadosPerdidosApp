@@ -30,6 +30,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.project.achadoseperdidos.db.fb.FBDatabase
+import com.project.achadoseperdidos.db.fb.toFBUser
+import com.project.achadoseperdidos.model.User
 import com.project.achadoseperdidos.ui.theme.AchadosEPerdidosTheme
 
 class RegisterActivity : ComponentActivity() {
@@ -98,6 +101,7 @@ fun RegisterPage(modifier: Modifier = Modifier) {
                     Firebase.auth.createUserWithEmailAndPassword(email, senha)
                         .addOnCompleteListener(activity!!) { task ->
                             if (task.isSuccessful) {
+                                FBDatabase().register(User(nome, email).toFBUser())
                                 Toast.makeText(activity,
                                     "Registro OK!", Toast.LENGTH_LONG).show()
                             } else {

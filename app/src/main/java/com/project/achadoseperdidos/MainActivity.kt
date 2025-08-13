@@ -21,12 +21,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.project.achadoseperdidos.db.fb.FBDatabase
+import com.project.achadoseperdidos.model.MainViewModel
+import com.project.achadoseperdidos.model.MainViewModelFactory
 import com.project.achadoseperdidos.ui.nav.BottomNavBar
 import com.project.achadoseperdidos.ui.nav.BottomNavItem
 import com.project.achadoseperdidos.ui.nav.MainNavHost
@@ -38,6 +43,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val fbDB = remember { FBDatabase() }
+            val viewModel: MainViewModel = viewModel(
+                factory = MainViewModelFactory(fbDB)
+            )
             val navController = rememberNavController()
             val currentRoute = navController.currentBackStackEntryAsState()
             val launcher = rememberLauncherForActivityResult(contract =
@@ -46,7 +55,10 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         TopAppBar(
-                            title = { Text("Bem-vindo/a!") },
+                            title = {
+                                val name = viewModel.user?.name?:"[não logado]"
+                                Text("Bem-vindo(a) $name! ")
+                                    },
                             actions = {
                                 IconButton( onClick = {
                                     Firebase.auth.signOut()
@@ -78,7 +90,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
                         launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-                        MainNavHost(navController = navController)
+                        MainNavHost(navController = navController, viewModel)
                     }
                 }
             }
