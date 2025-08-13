@@ -18,6 +18,8 @@ sealed interface Route {
     data object Notificacoes : Route
     @Serializable
     data object Buscar : Route
+    @Serializable
+    data class Cadastro(val lat: Double, val lng: Double): Route
 }
 
 sealed class BottomNavItem(val title: String, val icon: ImageVector, val route: Route) {
