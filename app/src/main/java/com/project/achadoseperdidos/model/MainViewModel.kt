@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.model.LatLng
 import com.project.achadoseperdidos.db.fb.FBDatabase
+import com.project.achadoseperdidos.db.fb.FBItem
 import com.project.achadoseperdidos.db.fb.FBUser
 import com.project.achadoseperdidos.ui.nav.Route
 
@@ -42,6 +43,18 @@ class MainViewModel(private val db: FBDatabase) : ViewModel(), FBDatabase.Listen
     }
 
     override fun onUserSignOut() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onItemAdded(item: FBItem) {
+        _items.add(item.toItem())
+    }
+
+    override fun onItemUpdated(item: FBItem) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onItemRemoved(item: FBItem) {
         TODO("Not yet implemented")
     }
 

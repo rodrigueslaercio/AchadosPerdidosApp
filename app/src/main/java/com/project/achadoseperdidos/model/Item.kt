@@ -1,5 +1,6 @@
 package com.project.achadoseperdidos.model
 
+import com.google.android.gms.maps.model.LatLng
 import java.time.LocalDate
 
 data class Item(
@@ -8,8 +9,7 @@ data class Item(
     val categoria: CategoriaItem,
     val data: LocalDate,
     val tipo: TipoItem,
-    val localizacao: String? = null,
+    val localizacao: LatLng? = null,
     val imagemUrl: String? = null,
     val recuperado: Boolean = false,
-    val usuario: User
 ) {}
