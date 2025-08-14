@@ -26,8 +26,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.Timestamp
 import com.project.achadoseperdidos.db.fb.FBDatabase
 import com.project.achadoseperdidos.model.CategoriaItem
+import com.project.achadoseperdidos.model.Item
 import com.project.achadoseperdidos.model.MainViewModel
 import com.project.achadoseperdidos.model.MainViewModelFactory
 import com.project.achadoseperdidos.model.TipoItem
@@ -92,6 +95,19 @@ fun CadastroItemPage(lat: Double, lng: Double, onBack: () -> Unit) {
         Row() {
             Button(
                 onClick = {
+                    val novoItem = Item(
+                        titulo = titulo,
+                        descricao = descricao,
+                        categoria = categoria,
+                        data = Timestamp.now(),
+                        tipo = tipo,
+                        localizacao = LatLng(lat, lng),
+                        imagemUrl = null, // ou algum valor se já tiver upload de imagem
+                        recuperado = false
+                    )
+
+                    viewModel.add(novoItem)
+
                     Toast.makeText(activity,
                         "Registro OK!", Toast.LENGTH_LONG).show()
                 },

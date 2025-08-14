@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
@@ -22,7 +23,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
@@ -33,6 +36,7 @@ import com.project.achadoseperdidos.model.MainViewModelFactory
 import com.project.achadoseperdidos.ui.nav.BottomNavBar
 import com.project.achadoseperdidos.ui.nav.BottomNavItem
 import com.project.achadoseperdidos.ui.nav.MainNavHost
+import com.project.achadoseperdidos.ui.nav.Route
 import com.project.achadoseperdidos.ui.theme.AchadosEPerdidosTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,6 +51,7 @@ class MainActivity : ComponentActivity() {
             )
             val navController = rememberNavController()
             val currentRoute = navController.currentBackStackEntryAsState()
+            val showButton = currentRoute.value?.destination?.hasRoute(Route.Home::class) == true
             val launcher = rememberLauncherForActivityResult(contract =
                 ActivityResultContracts.RequestPermission(), onResult = {} )
             AchadosEPerdidosTheme {
@@ -80,10 +85,14 @@ class MainActivity : ComponentActivity() {
                         BottomNavBar(navController = navController, items)
                     },
                     floatingActionButton = {
-                        FloatingActionButton(onClick = {
-                            viewModel.navigateToCadastroItem()
-                        }) {
-                            Icon(Icons.Default.Add, contentDescription = "Adicionar")
+                        if (showButton) {
+                            FloatingActionButton(onClick = { viewModel.navigateToCadastroItem() },
+                                modifier = Modifier
+                                    .padding(bottom = 16.dp)
+                                    .offset(x = (-50).dp, y = 0.dp)
+                                    ) {
+                                Icon(Icons.Default.Add, contentDescription = "Adicionar")
+                            }
                         }
                     }
 

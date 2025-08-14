@@ -1,16 +1,16 @@
 package com.project.achadoseperdidos.db.fb
 
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.Timestamp
 import com.project.achadoseperdidos.model.CategoriaItem
 import com.project.achadoseperdidos.model.Item
 import com.project.achadoseperdidos.model.TipoItem
-import java.time.LocalDate
 
 class FBItem {
     var titulo: String? = null
     var descricao: String? = null
     var categoria: CategoriaItem? = null
-    var data: LocalDate? = null
+    var data: Timestamp? = null
     var tipo: TipoItem?= null
     var lat : Double? = null
     var lng : Double? = null
@@ -20,7 +20,7 @@ class FBItem {
     fun toItem() : Item {
         val latlng = if (lat!=null&&lng!=null) LatLng(lat!!, lng!!) else null
         return Item(titulo!!, descricao!!, categoria!!,
-            data!!, tipo!!, localizacao = latlng,
+            data!!, tipo ?: TipoItem.PERDIDO, localizacao = latlng,
             null, recuperado
         );
     }

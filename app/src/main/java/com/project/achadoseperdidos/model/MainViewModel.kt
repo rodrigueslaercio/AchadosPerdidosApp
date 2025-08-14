@@ -1,6 +1,7 @@
 package com.project.achadoseperdidos.model
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -8,10 +9,11 @@ import com.google.android.gms.maps.model.LatLng
 import com.project.achadoseperdidos.db.fb.FBDatabase
 import com.project.achadoseperdidos.db.fb.FBItem
 import com.project.achadoseperdidos.db.fb.FBUser
+import com.project.achadoseperdidos.db.fb.toFBItem
 import com.project.achadoseperdidos.ui.nav.Route
 
 class MainViewModel(private val db: FBDatabase) : ViewModel(), FBDatabase.Listener {
-    private val _items = mutableListOf<Item>()
+    private val _items = mutableStateListOf<Item>()
     val items
         get() = _items.toList()
 
@@ -32,6 +34,10 @@ class MainViewModel(private val db: FBDatabase) : ViewModel(), FBDatabase.Listen
 
     init {
         db.setListener(this)
+    }
+
+    fun add(item: Item) {
+        db.add(item.toFBItem())
     }
 
     fun remove(item: Item) {

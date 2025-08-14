@@ -52,6 +52,12 @@ fun HomePage(modifier: Modifier = Modifier, viewModel: MainViewModel) {
                 viewModel.setSelectedMarkerPosition(latLng)
             }) {
 
+                viewModel.items.forEach {
+                    if (it.localizacao != null) {
+                        Marker(state = MarkerState(position = it.localizacao), title = it.titulo)
+                    }
+                }
+
             Marker(state = MarkerState(position = markerPosition),
                 title = "Local do item",
                 draggable = true,
