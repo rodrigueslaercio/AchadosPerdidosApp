@@ -45,8 +45,6 @@ fun CadastroItemPage(lat: Double, lng: Double, onBack: () -> Unit) {
     var descricao by remember { mutableStateOf("") }
     var tipo by remember { mutableStateOf(TipoItem.PERDIDO) }
     var categoria by remember { mutableStateOf(CategoriaItem.OUTROS) }
-    val user = viewModel.user
-    var localizacao by remember { mutableStateOf(viewModel.selectedMarkerPosition) }
     val activity = LocalContext.current as? Activity
 
     Column(
@@ -102,7 +100,7 @@ fun CadastroItemPage(lat: Double, lng: Double, onBack: () -> Unit) {
                         data = Timestamp.now(),
                         tipo = tipo,
                         localizacao = LatLng(lat, lng),
-                        imagemUrl = null, // ou algum valor se já tiver upload de imagem
+                        imagemUrl = null,
                         recuperado = false
                     )
 
