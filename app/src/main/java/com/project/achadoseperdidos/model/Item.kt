@@ -12,4 +12,5 @@ data class Item(
     val localizacao: LatLng? = null,
     val imagemUrl: String? = null,
     val recuperado: Boolean = false,
+    val userId: String
 ) {}

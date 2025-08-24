@@ -46,6 +46,8 @@ fun CadastroItemPage(lat: Double, lng: Double, onBack: () -> Unit) {
     var tipo by remember { mutableStateOf(TipoItem.PERDIDO) }
     var categoria by remember { mutableStateOf(CategoriaItem.OUTROS) }
     val activity = LocalContext.current as? Activity
+    val currentUser = viewModel.user
+
 
     Column(
         modifier = Modifier.padding(16.dp).fillMaxSize(),
@@ -93,6 +95,7 @@ fun CadastroItemPage(lat: Double, lng: Double, onBack: () -> Unit) {
         Row() {
             Button(
                 onClick = {
+                    if (currentUser != null) {
                     val novoItem = Item(
                         titulo = titulo,
                         descricao = descricao,
@@ -101,11 +104,13 @@ fun CadastroItemPage(lat: Double, lng: Double, onBack: () -> Unit) {
                         tipo = tipo,
                         localizacao = LatLng(lat, lng),
                         imagemUrl = null,
-                        recuperado = false
+                        recuperado = false,
+                        userId = currentUser.phone
                     )
-
-                    viewModel.add(novoItem)
-
+                        viewModel.add(novoItem)
+                    }else{
+                        println("Usuário não logado")
+                    }
                     Toast.makeText(activity,
                         "Registro OK!", Toast.LENGTH_LONG).show()
                 },

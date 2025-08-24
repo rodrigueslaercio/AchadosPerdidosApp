@@ -114,8 +114,9 @@ class FBDatabase {
                 val result = snapshot.documents
                     .mapNotNull { it.toObject(FBItem::class.java) }
                     .filter { fbItem ->
-                        fbItem.lng != null && fbItem.lng!! in lngMin..lngMax &&
-                                fbItem.categoria == categoria &&
+                        fbItem.lng != null &&
+                                fbItem.lng!! in lngMin..lngMax &&
+                                fbItem.categoria == categoria.name &&
                                 fbItem.recuperado == false
                     }
                 onResult(result)

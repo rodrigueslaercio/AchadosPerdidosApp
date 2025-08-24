@@ -9,33 +9,41 @@ import com.project.achadoseperdidos.model.TipoItem
 class FBItem {
     var titulo: String? = null
     var descricao: String? = null
-    var categoria: CategoriaItem? = null
-    var data: Timestamp? = null
-    var tipo: TipoItem?= null
-    var lat : Double? = null
-    var lng : Double? = null
+    var categoria: String? = null
+    var data: com.google.firebase.Timestamp? = null
+    var tipo: String? = null
+    var lat: Double? = null
+    var lng: Double? = null
+    var recuperado: Boolean? = false
+    var imagemUrl: String? = null
+    var userId: String? = null
 
-    var recuperado: Boolean = false
-
-    fun toItem() : Item {
-        val latlng = if (lat!=null&&lng!=null) LatLng(lat!!, lng!!) else null
-        return Item(titulo!!, descricao!!, categoria!!,
-            data!!, tipo ?: TipoItem.PERDIDO, localizacao = latlng,
-            null, recuperado
-        );
+    fun toItem(): Item {
+        return Item(
+            titulo = titulo ?: "",
+            descricao = descricao ?: "",
+            categoria = CategoriaItem.valueOf(categoria ?: "SELECIONAR"),
+            data = data ?:Timestamp.now(),
+            tipo = TipoItem.valueOf(tipo ?: "DEFAULT"),
+            localizacao = if (lat != null && lng != null) LatLng(lat!!, lng!!) else null,
+            imagemUrl = imagemUrl,
+            recuperado = recuperado == true,
+            userId = userId ?: ""
+        )
     }
 }
 
-fun Item.toFBItem() : FBItem {
+fun Item.toFBItem(): FBItem {
     val fbItem = FBItem()
-
     fbItem.titulo = this.titulo
     fbItem.descricao = this.descricao
-    fbItem.categoria = this.categoria
+    fbItem.categoria = this.categoria.name
     fbItem.data = this.data
-    fbItem.lat = this.localizacao?.latitude ?: 0.0
-    fbItem.lng = this.localizacao?.longitude ?: 0.0
+    fbItem.tipo = this.tipo.name
+    fbItem.lat = this.localizacao?.latitude
+    fbItem.lng = this.localizacao?.longitude
+    fbItem.imagemUrl = this.imagemUrl
     fbItem.recuperado = this.recuperado
-
+    fbItem.userId = this.userId
     return fbItem
 }
