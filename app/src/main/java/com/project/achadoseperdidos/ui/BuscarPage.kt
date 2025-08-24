@@ -2,13 +2,10 @@ package com.project.achadoseperdidos.ui
 
 import android.app.Activity
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -24,9 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.project.achadoseperdidos.model.CategoriaItem
-import com.project.achadoseperdidos.model.Item
 import com.project.achadoseperdidos.model.MainViewModel
 
 @Composable
@@ -34,33 +29,49 @@ fun BuscarPage(modifier: Modifier = Modifier, viewModel: MainViewModel) {
     val activity = LocalContext.current as? Activity
     var pesquisa by rememberSaveable { mutableStateOf("") }
     var categoria by remember { mutableStateOf(CategoriaItem.SELECIONAR) }
-
     val isButtonEnabled = pesquisa.isNotBlank() && categoria != CategoriaItem.SELECIONAR
 
-    Column(
+    androidx.compose.foundation.layout.Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Blue)
-            .wrapContentSize(Alignment.TopStart)
     ) {
-        OutlinedTextField(
-            value = pesquisa,
-            onValueChange = { pesquisa = it },
-            placeholder = { Text("Endereço...") },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Buscar") },
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp)
-                .background(Color.White)
-        )
+                .fillMaxSize()
+                .padding(bottom = 80.dp) // espaço para o botão
+        ) {
+            OutlinedTextField(
+                value = pesquisa,
+                onValueChange = { pesquisa = it },
+                placeholder = { Text("Endereço...") },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Buscar") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .background(Color.White)
+            )
 
-        CategoriaDropdown(
-            selectedCategoria = categoria,
-            onCategoriaSelected = { categoria = it }
-        )
+            CategoriaDropdown(
+                selectedCategoria = categoria,
+                onCategoriaSelected = { categoria = it }
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
+            // Lista de resultados ocupa toda a área restante
+            androidx.compose.foundation.lazy.LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(viewModel.resultadosPesquisa, key = { it.titulo }) { item ->
+                    ItemPesquisaComposable(item = item, onClick = {
+                        // ação ao clicar
+                    })
+                }
+            }
+        }
+
+        // Botão fixo na parte inferior
         Button(
             onClick = {
                 activity?.let {
@@ -69,53 +80,11 @@ fun BuscarPage(modifier: Modifier = Modifier, viewModel: MainViewModel) {
             },
             enabled = isButtonEnabled,
             modifier = Modifier
+                .align(Alignment.BottomCenter)
                 .width(200.dp)
-                .padding(16.dp)
-                .align(Alignment.CenterHorizontally)
+                .padding(bottom = 16.dp)
         ) {
             Text("Pesquisar")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Lista de resultados
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(viewModel.resultadosPesquisa, key = { it.titulo }) { item ->
-                ItemPesquisaComposable(item = item, onClick = {
-                    // Aqui você pode adicionar ação ao clicar no item
-                })
-            }
-        }
-    }
-}
-
-@Composable
-fun ItemPesquisaComposable(
-    item: Item,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable { onClick() },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = Icons.Rounded.FavoriteBorder,
-            contentDescription = ""
-        )
-
-        Spacer(modifier = Modifier.size(12.dp))
-
-        Column(modifier = modifier.weight(1f)) {
-            Text(
-                text = item.titulo,
-                fontSize = 20.sp
-            )
         }
     }
 }
