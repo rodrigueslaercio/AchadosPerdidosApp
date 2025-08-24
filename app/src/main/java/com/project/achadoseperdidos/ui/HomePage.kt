@@ -52,11 +52,11 @@ fun HomePage(modifier: Modifier = Modifier, viewModel: MainViewModel) {
                 viewModel.setSelectedMarkerPosition(latLng)
             }) {
 
-                viewModel.items.forEach {
-                    if (it.localizacao != null) {
-                        Marker(state = MarkerState(position = it.localizacao), title = it.titulo)
-                    }
+            viewModel.items.filter { !it.recuperado }.forEach { item ->
+                item.localizacao?.let { loc ->
+                    Marker(state = MarkerState(position = loc), title = item.titulo)
                 }
+            }
 
             Marker(state = MarkerState(position = markerPosition),
                 title = "Local do item",
