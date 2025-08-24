@@ -59,6 +59,7 @@ class MainViewModel(private val db: FBDatabase) : ViewModel(), FBDatabase.Listen
 
     override fun onItemAdded(item: FBItem) {
         _items.add(item.toItem())
+        _page.value = Route.Home
     }
 
     override fun onItemUpdated(item: FBItem) {
