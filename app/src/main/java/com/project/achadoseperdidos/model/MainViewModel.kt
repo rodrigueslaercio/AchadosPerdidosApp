@@ -1,5 +1,7 @@
 package com.project.achadoseperdidos.model
 
+import android.content.Context
+import android.location.Geocoder
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -13,6 +15,9 @@ import com.project.achadoseperdidos.db.fb.toFBItem
 import com.project.achadoseperdidos.ui.nav.Route
 
 class MainViewModel(private val db: FBDatabase) : ViewModel(), FBDatabase.Listener {
+    var resultadosPesquisa = mutableStateListOf<Item>()
+        private set
+
     private val _items = mutableStateListOf<Item>()
     val items
         get() = _items.toList()
@@ -73,6 +78,30 @@ class MainViewModel(private val db: FBDatabase) : ViewModel(), FBDatabase.Listen
 
     fun clearSelectedPos() {
         _selectedMarkerPosition.value = null
+    }
+
+    fun search(pesquisa: String, categoria: CategoriaItem, context: Context) {
+        val geocoder = Geocoder(context)
+        val addresses = geocoder.getFromLocationName(pesquisa, 1)
+        if (addresses.isNullOrEmpty()) return
+
+        val location = LatLng(addresses[0].latitude, addresses[0].longitude)
+        val margin = 0.01
+
+        // Filtrar itens globais
+        val resultados = _items.filter { item ->
+            val lat = item.localizacao?.latitude ?: return@filter false
+            val lng = item.localizacao?.longitude ?: return@filter false
+            val dentroMargem =
+                (lat in (location.latitude - margin)..(location.latitude + margin)) &&
+                        (lng in (location.longitude - margin)..(location.longitude + margin))
+            val categoriaIgual = item.categoria == categoria
+            val naoRecuperado = item.recuperado == false
+            dentroMargem && categoriaIgual && naoRecuperado
+        }
+
+        resultadosPesquisa.clear()
+        resultadosPesquisa.addAll(resultados)
     }
 }
 

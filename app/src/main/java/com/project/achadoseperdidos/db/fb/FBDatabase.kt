@@ -1,10 +1,12 @@
 package com.project.achadoseperdidos.db.fb
 
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.firestore
+import com.project.achadoseperdidos.model.CategoriaItem
 
 class FBDatabase {
     interface Listener {
@@ -91,6 +93,33 @@ class FBDatabase {
         val uid = auth.currentUser!!.uid
         db.collection("itens").document(uid)
             .collection("itens").document(item.titulo!!).delete()
+    }
+
+    fun searchItemsByArea(
+        center: LatLng,
+        margin: Double,
+        categoria: CategoriaItem,
+        onResult: (List<FBItem>) -> Unit
+    ) {
+        val latMin = center.latitude - margin
+        val latMax = center.latitude + margin
+        val lngMin = center.longitude - margin
+        val lngMax = center.longitude + margin
+
+        db.collection("itens")
+            .whereGreaterThanOrEqualTo("lat", latMin)
+            .whereLessThanOrEqualTo("lat", latMax)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val result = snapshot.documents
+                    .mapNotNull { it.toObject(FBItem::class.java) }
+                    .filter { fbItem ->
+                        fbItem.lng != null && fbItem.lng!! in lngMin..lngMax &&
+                                fbItem.categoria == categoria &&
+                                fbItem.recuperado == false
+                    }
+                onResult(result)
+            }
     }
 
 
