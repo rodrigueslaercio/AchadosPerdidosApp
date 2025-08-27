@@ -54,7 +54,7 @@ class MainViewModel(private val db: FBDatabase) : ViewModel(), FBDatabase.Listen
     }
 
     override fun onUserSignOut() {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
     override fun onItemAdded(item: FBItem) {
@@ -63,11 +63,11 @@ class MainViewModel(private val db: FBDatabase) : ViewModel(), FBDatabase.Listen
     }
 
     override fun onItemUpdated(item: FBItem) {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
     override fun onItemRemoved(item: FBItem) {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
     fun navigateToCadastroItem() {
