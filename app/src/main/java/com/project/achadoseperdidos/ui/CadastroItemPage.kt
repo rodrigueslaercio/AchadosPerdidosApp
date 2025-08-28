@@ -59,6 +59,7 @@ fun CadastroItemPage(lat: Double, lng: Double, onBack: () -> Unit, fbDatabase: F
             descricao = it.descricao
             tipo = it.tipo
             categoria = it.categoria
+            recuperado = it.recuperado
         }
     }
 
