@@ -14,8 +14,7 @@ sealed interface Route {
     data object Home : Route
     @Serializable
     data object MinhasPostagens : Route
-    @Serializable
-    data object Notificacoes : Route
+
     @Serializable
     data object Buscar : Route
     @Serializable
@@ -25,6 +24,5 @@ sealed interface Route {
 sealed class BottomNavItem(val title: String, val icon: ImageVector, val route: Route) {
     data object HomeButton : BottomNavItem("Início", Icons.Default.Home, Route.Home)
     data object MinhasPostagensButton : BottomNavItem("Minhas postagens", Icons.Default.Favorite, Route.MinhasPostagens)
-    data object NotificacoesButton : BottomNavItem("Notificações", Icons.Default.Notifications, Route.Notificacoes)
     data object BuscarButton : BottomNavItem("Buscar", Icons.Default.Search, Route.Buscar)
 }

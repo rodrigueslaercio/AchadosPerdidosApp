@@ -87,8 +87,6 @@ class FBDatabase {
             throw RuntimeException("User not logged in!")
         }
 
-        if (item.id == null) throw RuntimeException("Item ID is null")
-
         val uid = auth.currentUser!!.uid
         val docRef = db.collection("users").document(uid)
             .collection("itens")

@@ -19,7 +19,6 @@ fun MainNavHost(navController: NavHostController, viewModel: MainViewModel, fbDa
         composable<Route.Home> { HomePage(viewModel = viewModel) }
         composable<Route.MinhasPostagens> { MinhasPostagensPage(viewModel = viewModel) }
         composable<Route.Buscar> { BuscarPage(viewModel = viewModel) }
-        composable<Route.Notificacoes> { NotificacoesPage(viewModel = viewModel) }
         composable<Route.Cadastro> { backStackEntry ->
             val args = backStackEntry.toRoute<Route.Cadastro>()
             CadastroItemPage(lat = args.lat, lng = args.lng, onBack = {

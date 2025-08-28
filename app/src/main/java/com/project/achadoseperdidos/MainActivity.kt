@@ -80,7 +80,6 @@ class MainActivity : ComponentActivity() {
                             BottomNavItem.HomeButton,
                             BottomNavItem.MinhasPostagensButton,
                             BottomNavItem.BuscarButton,
-                            BottomNavItem.NotificacoesButton
                         )
                         BottomNavBar(navController = navController, items)
                     },

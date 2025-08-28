@@ -66,6 +66,9 @@ class MainViewModel(private val db: FBDatabase) : ViewModel(), FBDatabase.Listen
 
     override fun onUserLoaded(user: FBUser) {
         _user.value = user.toUser()
+
+        _items.clear()
+        _items.addAll(_globalItems.filter { it.userId == _user.value?.phone })
     }
 
     override fun onUserSignOut() {
