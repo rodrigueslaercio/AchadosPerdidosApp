@@ -21,12 +21,14 @@ class FBDatabase {
     private val auth = Firebase.auth
     private val db = Firebase.firestore
     private var itensListReg: ListenerRegistration? = null
+    private var globalItensListReg: ListenerRegistration? = null
     private var listener : Listener? = null
 
     init {
         auth.addAuthStateListener { auth ->
             if (auth.currentUser == null) {
                 itensListReg?.remove()
+                globalItensListReg?.remove()
                 listener?.onUserSignOut()
                 return@addAuthStateListener
             }
@@ -50,6 +52,19 @@ class FBDatabase {
                             listener?.onItemUpdated(fbItem)
                         } else if (change.type == DocumentChange.Type.REMOVED) {
                             listener?.onItemRemoved(fbItem)
+                        }
+                    }
+                }
+
+            globalItensListReg = db.collectionGroup("itens")
+                .addSnapshotListener { snapshots, ex ->
+                    if (ex != null) return@addSnapshotListener
+                    snapshots?.documentChanges?.forEach { change ->
+                        val fbItem = change.document.toObject(FBItem::class.java)
+                        when (change.type) {
+                            DocumentChange.Type.ADDED -> listener?.onItemAdded(fbItem)
+                            DocumentChange.Type.MODIFIED -> listener?.onItemUpdated(fbItem)
+                            DocumentChange.Type.REMOVED -> listener?.onItemRemoved(fbItem)
                         }
                     }
                 }

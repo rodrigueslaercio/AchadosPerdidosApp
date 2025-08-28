@@ -22,6 +22,10 @@ class MainViewModel(private val db: FBDatabase) : ViewModel(), FBDatabase.Listen
     val items
         get() = _items.toList()
 
+    private val _globalItems = mutableStateListOf<Item>()
+    val globalItems: List<Item>
+        get() = _globalItems.toList()
+
     private var _item = mutableStateOf<Item?>(null)
     var item: Item?
         get() = _item.value
@@ -69,7 +73,15 @@ class MainViewModel(private val db: FBDatabase) : ViewModel(), FBDatabase.Listen
     }
 
     override fun onItemAdded(item: FBItem) {
-        _items.add(item.toItem())
+        val newItem = item.toItem()
+        if (_globalItems.none { it.id == newItem.id }) {
+            _globalItems.add(newItem)
+        }
+        if (newItem.userId == _user.value?.phone) {
+            if (_items.none { it.id == newItem.id }) {
+                _items.add(newItem)
+            }
+        }
         _page.value = Route.Home
     }
 
@@ -108,7 +120,7 @@ class MainViewModel(private val db: FBDatabase) : ViewModel(), FBDatabase.Listen
         val margin = 0.01
 
         // Filtrar itens globais
-        val resultados = _items.filter { item ->
+        val resultados = _globalItems.filter { item ->
             val lat = item.localizacao?.latitude ?: return@filter false
             val lng = item.localizacao?.longitude ?: return@filter false
             val dentroMargem =

@@ -34,7 +34,7 @@ fun BuscarPage(modifier: Modifier = Modifier, viewModel: MainViewModel) {
     androidx.compose.foundation.layout.Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Blue)
+            .background(Color.White)
     ) {
         Column(
             modifier = Modifier

@@ -49,7 +49,7 @@ fun HomePage(modifier: Modifier = Modifier, viewModel: MainViewModel) {
                 viewModel.setSelectedMarkerPosition(latLng)
             }
         ) {
-            viewModel.items.filter { it.recuperado == false }.forEach {
+            viewModel.globalItems.filter { it.recuperado == false }.forEach {
 
                 println("${it.titulo} - recuperado=${it.recuperado}")
                 it.localizacao?.let { loc ->
