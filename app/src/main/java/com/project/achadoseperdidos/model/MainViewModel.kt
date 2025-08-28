@@ -22,12 +22,19 @@ class MainViewModel(private val db: FBDatabase) : ViewModel(), FBDatabase.Listen
     val items
         get() = _items.toList()
 
+    private var _item = mutableStateOf<Item?>(null)
+    var item: Item?
+        get() = _item.value
+        set(tmp) { _item.value = tmp?.copy() }
+
     private val _user = mutableStateOf<User?>(null)
     val user: User?
         get() = _user.value
 
     private val _page = mutableStateOf<Route>(Route.Home)
-    val page: State<Route> = _page
+    var page: Route
+        get() = _page.value
+        set(tmp) { _page.value = tmp }
 
     private val _selectedMarkerPosition = mutableStateOf<LatLng?>(null)
     val selectedMarkerPosition: State<LatLng?> = _selectedMarkerPosition
@@ -43,6 +50,10 @@ class MainViewModel(private val db: FBDatabase) : ViewModel(), FBDatabase.Listen
 
     fun add(item: Item) {
         db.add(item.toFBItem())
+    }
+
+    fun update(item: Item) {
+        db.update(item.toFBItem())
     }
 
     fun remove(item: Item) {
@@ -63,7 +74,10 @@ class MainViewModel(private val db: FBDatabase) : ViewModel(), FBDatabase.Listen
     }
 
     override fun onItemUpdated(item: FBItem) {
-        //TODO("Not yet implemented")
+        val index = _items.indexOfFirst { it.id == item.id }
+        if (index != -1) {
+            _items[index] = item.toItem()
+        }
     }
 
     override fun onItemRemoved(item: FBItem) {
@@ -79,6 +93,10 @@ class MainViewModel(private val db: FBDatabase) : ViewModel(), FBDatabase.Listen
 
     fun clearSelectedPos() {
         _selectedMarkerPosition.value = null
+    }
+
+    fun clearItem() {
+        _item.value = null
     }
 
     fun search(pesquisa: String, categoria: CategoriaItem, context: Context) {

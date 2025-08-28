@@ -7,6 +7,7 @@ import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.firestore
 import com.project.achadoseperdidos.model.CategoriaItem
+import com.project.achadoseperdidos.model.Item
 
 class FBDatabase {
     interface Listener {
@@ -71,13 +72,15 @@ class FBDatabase {
             throw RuntimeException("User not logged in!")
         }
 
-        if (item.titulo == null || item.titulo!!.isEmpty()) {
-            throw RuntimeException("Item with null or empty name!")
-        }
+        if (item.id == null) throw RuntimeException("Item ID is null")
 
         val uid = auth.currentUser!!.uid
-        db.collection("users").document(uid)
-            .collection("itens").document(item.titulo!!).set(item)
+        val docRef = db.collection("users").document(uid)
+            .collection("itens")
+            .document()
+        item.id = docRef.id
+
+        docRef.set(item)
 
     }
 
@@ -86,13 +89,32 @@ class FBDatabase {
             throw RuntimeException("User not logged in!")
         }
 
-        if (item.titulo == null || item.titulo!!.isEmpty()) {
-            throw RuntimeException("Item with null or empty name!")
-        }
+        if (item.id == null) throw RuntimeException("Item ID is null")
 
         val uid = auth.currentUser!!.uid
-        db.collection("itens").document(uid)
-            .collection("itens").document(item.titulo!!).delete()
+        db.collection("users").document(uid)
+            .collection("itens").document(item.id!!).delete()
+    }
+
+    fun update(item: FBItem) {
+        if (auth.currentUser == null) throw RuntimeException("Not logged in")
+        val uid = auth.currentUser!!.uid
+
+        val changes = mapOf(
+            "titulo" to item.titulo,
+            "descricao" to item.descricao,
+            "tipo" to item.tipo,
+            "categoria" to item.categoria,
+            "recuperado" to item.recuperado,
+            "lat" to item.lat,
+            "lng" to item.lng,
+            "userId" to item.userId
+        )
+
+        db.collection("users").document(uid)
+            .collection("itens")
+            .document(item.id!!)
+            .update(changes)
     }
 
     fun searchItemsByArea(
@@ -106,7 +128,7 @@ class FBDatabase {
         val lngMin = center.longitude - margin
         val lngMax = center.longitude + margin
 
-        db.collection("itens")
+        db.collectionGroup("itens")
             .whereGreaterThanOrEqualTo("lat", latMin)
             .whereLessThanOrEqualTo("lat", latMax)
             .get()

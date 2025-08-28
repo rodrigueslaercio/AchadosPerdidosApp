@@ -50,6 +50,8 @@ fun HomePage(modifier: Modifier = Modifier, viewModel: MainViewModel) {
             }
         ) {
             viewModel.items.filter { it.recuperado == false }.forEach {
+
+                println("${it.titulo} - recuperado=${it.recuperado}")
                 it.localizacao?.let { loc ->
                     Marker(state = MarkerState(position = loc), title = it.titulo)
                 }

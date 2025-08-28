@@ -7,6 +7,7 @@ import com.project.achadoseperdidos.model.Item
 import com.project.achadoseperdidos.model.TipoItem
 
 class FBItem {
+    var id: String? = null
     var titulo: String? = null
     var descricao: String? = null
     var categoria: String? = null
@@ -20,6 +21,7 @@ class FBItem {
 
     fun toItem(): Item {
         return Item(
+            id = id ?: "",
             titulo = titulo ?: "",
             descricao = descricao ?: "",
             categoria = CategoriaItem.valueOf(categoria ?: "SELECIONAR"),
@@ -35,6 +37,7 @@ class FBItem {
 
 fun Item.toFBItem(): FBItem {
     val fbItem = FBItem()
+    fbItem.id = this.id
     fbItem.titulo = this.titulo
     fbItem.descricao = this.descricao
     fbItem.categoria = this.categoria.name

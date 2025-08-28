@@ -86,7 +86,9 @@ class MainActivity : ComponentActivity() {
                     },
                     floatingActionButton = {
                         if (showButton) {
-                            FloatingActionButton(onClick = { viewModel.navigateToCadastroItem() },
+                            FloatingActionButton(onClick = {
+                                viewModel.clearItem()
+                                viewModel.navigateToCadastroItem() },
                                 modifier = Modifier
                                     .padding(bottom = 16.dp)
                                     .offset(x = (-50).dp, y = 0.dp)
@@ -99,11 +101,11 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
                         launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-                        MainNavHost(navController = navController, viewModel)
+                        MainNavHost(navController = navController, viewModel, fbDB)
                     }
                 }
-                LaunchedEffect(viewModel.page.value) {
-                    val route = viewModel.page.value
+                LaunchedEffect(viewModel.page) {
+                    val route = viewModel.page
                     navController.navigate(route) {
                         navController.graph.startDestinationRoute?.let { start ->
                             popUpTo(start) { saveState = true }

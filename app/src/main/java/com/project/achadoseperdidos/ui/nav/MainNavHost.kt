@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.project.achadoseperdidos.db.fb.FBDatabase
 import com.project.achadoseperdidos.model.MainViewModel
 import com.project.achadoseperdidos.ui.BuscarPage
 import com.project.achadoseperdidos.ui.CadastroItemPage
@@ -13,7 +14,7 @@ import com.project.achadoseperdidos.ui.MinhasPostagensPage
 import com.project.achadoseperdidos.ui.NotificacoesPage
 
 @Composable
-fun MainNavHost(navController: NavHostController, viewModel: MainViewModel) {
+fun MainNavHost(navController: NavHostController, viewModel: MainViewModel, fbDatabase: FBDatabase) {
     NavHost(navController, startDestination = Route.Home) {
         composable<Route.Home> { HomePage(viewModel = viewModel) }
         composable<Route.MinhasPostagens> { MinhasPostagensPage(viewModel = viewModel) }
@@ -22,8 +23,9 @@ fun MainNavHost(navController: NavHostController, viewModel: MainViewModel) {
         composable<Route.Cadastro> { backStackEntry ->
             val args = backStackEntry.toRoute<Route.Cadastro>()
             CadastroItemPage(lat = args.lat, lng = args.lng, onBack = {
+                viewModel.clearItem()
                 navController.popBackStack()
-            })
+            }, fbDatabase = fbDatabase, viewModel = viewModel)
         }
     }
 }
