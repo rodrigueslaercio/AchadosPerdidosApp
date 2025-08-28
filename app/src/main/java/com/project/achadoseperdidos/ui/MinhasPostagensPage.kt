@@ -38,7 +38,7 @@ fun MinhasPostagensPage(modifier: Modifier = Modifier, viewModel: MainViewModel)
             .fillMaxSize()
             .padding(8.dp)
     ) {
-        items(itemList, key = { it.titulo }) { item ->
+        items(itemList, key = { it.id }) { item ->
             ItemComposable(item = item, onClose = {
                 viewModel.remove(item)
                 Toast.makeText(activity, "Removido!", Toast.LENGTH_LONG).show()
