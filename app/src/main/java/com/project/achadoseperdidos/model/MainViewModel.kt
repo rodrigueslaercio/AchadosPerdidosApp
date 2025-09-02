@@ -89,9 +89,18 @@ class MainViewModel(private val db: FBDatabase) : ViewModel(), FBDatabase.Listen
     }
 
     override fun onItemUpdated(item: FBItem) {
-        val index = _items.indexOfFirst { it.id == item.id }
-        if (index != -1) {
-            _items[index] = item.toItem()
+        val updatedItem = item.toItem()
+
+        // Atualiza em _items (itens do usuário logado)
+        val indexUser = _items.indexOfFirst { it.id == updatedItem.id }
+        if (indexUser != -1) {
+            _items[indexUser] = updatedItem
+        }
+
+        // Atualiza em _globalItems (todos os itens)
+        val indexGlobal = _globalItems.indexOfFirst { it.id == updatedItem.id }
+        if (indexGlobal != -1) {
+            _globalItems[indexGlobal] = updatedItem
         }
     }
 
